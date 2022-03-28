@@ -13,6 +13,7 @@ public struct LegacyScrollView<Content: View>: UIViewRepresentable {
 
     let axis: Axis
     let showsIndicators: Bool
+    let enableScroll: Bool
     var content: () -> Content
 
     // MARK: - UIScrollView Callbacks
@@ -24,6 +25,8 @@ public struct LegacyScrollView<Content: View>: UIViewRepresentable {
     internal var onReachTop: ((UIScrollView) -> Void)?
     internal var onEndDecelerating: ((UIScrollView) -> Void)?
     internal var onEndDragging: ((UIScrollView) -> Void)?
+  
+    
 
     public func makeCoordinator() -> LegacyScrollViewCoordinator<Content> {
         let ans = LegacyScrollViewCoordinator(self)
@@ -42,6 +45,7 @@ public struct LegacyScrollView<Content: View>: UIViewRepresentable {
         ans.delegate = context.coordinator
         ans.showsVerticalScrollIndicator = axis == .vertical && showsIndicators
         ans.showsHorizontalScrollIndicator = axis == .horizontal && showsIndicators
+        ans.isScrollEnabled = enableScroll
 
         return ans
     }
@@ -53,8 +57,9 @@ public struct LegacyScrollView<Content: View>: UIViewRepresentable {
             view.contentViewController = UIHostingController(rootView: contentView)
             return
         }
-
+      
         hosting.rootView = contentView
+        view.isScrollEnabled = enableScroll
         view.updateView()
     }
 }
